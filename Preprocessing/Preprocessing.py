@@ -36,5 +36,4 @@ class Preprocessing():
         data = data[data['代號'].str.isdigit()]
         print(data)
         data.to_csv('./stock_list.csv')
-    
-    def crawl_daily_price(self):
+
