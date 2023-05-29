@@ -36,9 +36,11 @@ print(balance_data)
 
 # 現金流量表 
 # 現金流量表讀取又問題, 需嘗試用爬蟲解決或查詢此問題修正方法
-cf_data = stock.cash_flow
+cf_data = stock.cashflow
 print(cf_data)
 
 # 分析師推薦
 recommands = stock.recommendations
+
+
 
