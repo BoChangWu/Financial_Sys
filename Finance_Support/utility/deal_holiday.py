@@ -1,6 +1,6 @@
 import pandas as pd
 from datetime import datetime ,date
-
+import os
 '''
 年度開休市檔案下載網址: https://www.twse.com.tw/zh/trading/holiday.html 
 需要下載後轉換
@@ -16,7 +16,8 @@ class Holiday_Detect():
 
         # 讀取下載的csv檔案, skiprows 如果是[0,4] 則跳過指定的列, 若 = 6 代表跳過 0-6列 
         # utf-8 無法讀檔, 因此使用big5
-        x = pd.read_csv(f'./holiday_schedule/holidaySchedule_{self.convert_today}.csv',encoding='big5',skiprows=[0])
+        print(os.path.isfile('./data/holiday/112.csv'))
+        x = pd.read_csv(f'./data/holiday/holidaySchedule_{int(self.convert_today)-1911}.csv',encoding='big5',skiprows=[0])
 
         # 修改 '                日期' 欄位變成 '日期'
         x.rename(columns={'                日期': '日期'},inplace=True)
@@ -34,13 +35,17 @@ class Holiday_Detect():
         x['日期'] = x['日期'].apply(lambda x: x.replace('(',''))
 
         # 儲存成excel
-        x['日期'].to_csv(f'./holiday_schedule/holiday_{self.convert_today}.csv',columns=['日期'])
+        x['日期'].to_csv(f'./data/holiday/holiday_{self.convert_today}.csv',columns=['日期'])
 
-    def is_open(self,_date:date) -> bool:
+    def is_open(self,now_date:date) -> bool:
         # 規定格式, 年月日間不能有符號
 
-        # 讀取剛剛的休市日期檔ˋ
-        hd = pd.read_csv(f'./holiday_schedule/holiday_{self.convert_today}.csv')
+        # 讀取剛剛的休市日期檔
+        try:
+            hd = pd.read_csv(f'./data/holiday/holiday_{self.convert_today}.csv')
+        except:
+            self.deal_holiday()
+            hd = pd.read_csv(f'./data/holiday/holiday_{self.convert_today}.csv')
 
         # 轉換為list 備用
         hd_date = pd.to_datetime(hd['日期']).to_list()
@@ -48,10 +53,10 @@ class Holiday_Detect():
         
 
         # 將日期轉成字串
-        str_date = _date.strftime('%Y%m%d')
+        str_date = now_date.strftime('%Y%m%d')
 
         # 使用 weekday 函數判斷星期幾
-        day = _date.weekday()
+        day = now_date.weekday()
 
         if day == 5 or day == 6:
             return False

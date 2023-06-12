@@ -10,15 +10,23 @@ from Finance_Support.utility.deal_holiday import Holiday_Detect
 
 from datetime import date,timedelta
 import os
+import traceback
 import pandas as pd
 from Finance_Support.utility.settings import mail_group,mail_writer
 
 
-today = date.today()
+
+
 
 def follow_corp():
     # 傳入判斷
-    is_trade = Holiday_Detect.is_open(today)
+
+
+    today = date.today()
+    holiday =Holiday_Detect()
+    three_major = Three_Major()
+
+    is_trade = holiday.is_open(now_date=today)
 
     if not is_trade:
 
@@ -40,28 +48,62 @@ def follow_corp():
 
     # 迴圈搜尋 x 次, 這邊代入10
 
-    for i in range(10):
-        # 如果control 比 2 還小 , 則展開搜尋
-        
-        if control <= 2:
+    try:
+
+        for i in range(10):
+            # 如果control 比 2 還小 , 則展開搜尋
             
-            date_target = today+ timedelta(days=-int(i))
-            
-            is_trade =Holiday_Detect.is_open(date_target) 
-
-            if not is_trade:
-                continue
-
-            #有開盤則control +1, 並且進行三大法人買賣超處理
-            else:
-
-                convert_date = date_target.strftime('%Y%m%d')
-                data = Three_Major.daily_report(convert_date)
-                print(data)
+            if control <= 2:
                 
-                control +=1
-                exit()
+                date_target = today+ timedelta(days=-int(i))
+                
+                is_trade =holiday.is_open(now_date=date_target) 
 
-        #如果 control 比2 大 , 代表已經蒐集到足夠的資料, break 結束迴圈
-        else:
-            break
+                if not is_trade:
+                    continue
+
+                #有開盤則control +1, 並且進行三大法人買賣超處理
+                else:
+
+                    convert_date = date_target.strftime('%Y%m%d')
+                    data_path = three_major.daily_report()
+
+                    
+                    data = pd.read_csv(data_path,thousands=',')
+                    
+                    # 只保留三大法人買賣超股數大於0 的
+                    d_s = data[(data[u'三大法人買賣超股數']>0)]
+
+                    #前50名三大法人買超最大量
+                    d_s = d_s[:50]
+
+                    # 當 control == 0 時意味著是第一次搜尋到清單, 因此當主軸
+                    if control == 0:
+                        result = set(d_s[u'證券代號'].to_list())
+                    #如果不是的話我們用 intersection 函數來取交集
+                    else:
+                        result = result.intersection(set(d_s[u'證券代號'].to_list()))
+                    # 如果不是的話我們用
+
+                    d_s.to_csv('test.csv')
+                    control +=1
+                    
+
+            #如果 control 比2 大 , 代表已經蒐集到足夠的資料, break 結束迴圈
+            else:
+                break
+        
+        
+        subject = f'{today}: 三大法人篩選'
+        # 內容就是剛剛篩選玩的股票
+        body = f'目標股票 {result} 連續三日法人買超'
+
+        smtp(mail_writer,mail_group,subject,body)
+        
+    except:
+        
+        subject = f'{today} 三大法人篩選異常'
+
+        body = traceback.format_exc()
+
+        smtp(mail_writer,mail_group,subject,body)

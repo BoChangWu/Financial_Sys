@@ -12,6 +12,8 @@ from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.by import By
 from time import sleep
 
+from utility.system_save import save_csv
+
 yesterday = date.strftime(date.today()-timedelta(days=1),'%Y-%m-%d')
 
 class Stock():

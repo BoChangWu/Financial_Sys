@@ -1,8 +1,8 @@
 
-from AES_Encryption.en_decrype import *
+from .en_decrype import *
 import json
 import os
-from ..setting import send_from
+from Finance_Support.utility.settings import mail_writer
 '''
 用法:僅須在程式中使用:
 conn,cursor = check_encrype('Any_string_you_define')
@@ -10,7 +10,7 @@ conn,cursor = check_encrype('Any_string_you_define')
 def input_new_encrype(fuc_name,key_path,result_path):
     print(f'Starting input ......{fuc_name}')
     # user_id = input('Please input gmail address:')
-    user_id = send_from
+    user_id = mail_writer
     password = input('Please input password:')
     print(result_path)
     result_file_path = (result_path+'encrype.config').replace('\n','')

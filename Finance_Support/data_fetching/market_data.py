@@ -35,15 +35,20 @@ class Three_Major():
             r_type = choose_type
         else:
             r_type = self.select_type
-
+        
         res = requests.get(f'https://www.twse.com.tw/rwd/zh/fund/T86?response=json&date={r_date}&selectType={r_type}&_=1685065571229')
         results = res.json()
-
+        print(results)
         df = pd.DataFrame(results['data'],columns=results['fields'])
 
         print(df)
 
-        save_csv(df,f'market/threeMajors/TMC_{r_type}_{r_date}.csv')
+        if save_csv(df,f'market/threeMajors/TMC_{r_type}_{r_date}.csv'):
+            print('OK')
+        else:
+            print('Fail')
+
+        return f'./data/market/threeMajors/TMC_{r_type}_{r_date}.csv' 
         
 
 class Market_Data():
@@ -84,9 +89,10 @@ class Market_Data():
         # 更換剩餘欄位順序
         self.data = self.data[['代號','股票名稱','上市日','市場別','產業別']]
 
+        self.data = self.data.dropna(subset=['產業別'])
         self.data = self.data[self.data['代號'].str.isdigit()]
 
-        data.to_csv('./stock_list.csv')
+        self.data.to_csv('./data/market/stocks/stock_list.csv')
 
-        save_csv(self.data,f"market/stockList/stocks_{date.strftime(date.today(),'%Y%m%d')}")
+        # save_csv(self.data,f"market/stockList/stocks_{date.strftime(date.today(),'%Y%m%d')}")
 
