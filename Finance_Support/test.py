@@ -10,8 +10,8 @@ from Finance_Support.data_fetching.market_data import Market_Data
 
 # with_dividend()
 
-# with_devidend_price()
-with_price_fall()
+with_devidend_price()
+# with_price_fall()
 
 # a = Market_Data()
 # a.stocks_list()

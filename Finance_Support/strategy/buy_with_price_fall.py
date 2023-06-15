@@ -133,4 +133,8 @@ def with_price_fall():
             </html>'''
     
     smtp(mail_writer,mail_group,subject,body,mode='html')
+
+if __name__ == '__main__':
+
+    with_price_fall()
     

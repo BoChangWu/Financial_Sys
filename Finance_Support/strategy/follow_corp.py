@@ -107,3 +107,7 @@ def follow_corp():
         body = traceback.format_exc()
 
         smtp(mail_writer,mail_group,subject,body)
+
+if __name__ == '__main__':
+
+    follow_corp()

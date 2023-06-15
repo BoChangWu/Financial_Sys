@@ -111,3 +111,7 @@ def with_devidend_price():
             </html>'''
     
     smtp(mail_writer,mail_group,subject,body,mode='html')
+
+if __name__ == '__main__':
+
+    with_devidend_price()
