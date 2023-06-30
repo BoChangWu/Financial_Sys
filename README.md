@@ -21,7 +21,9 @@
 ----------------
 ### Preprocessing
 
-
+### Issue
+1. 圖表不管用backtrader 或 pyfolio 都可能跑不出圖... 先忽略此問題嘗試使用別的方法作圖
 ### Data Source
 [Yahoo Finance US](https://finance.yahoo.com/)
 [Backtrader](https://www.backtrader.com/)
+[Backtrader tutorial](https://www.youtube.com/watch?v=pt4auu_ZPm4)

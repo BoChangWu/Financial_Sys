@@ -96,3 +96,11 @@ class Market_Data():
 
         # save_csv(self.data,f"market/stockList/stocks_{date.strftime(date.today(),'%Y%m%d')}")
 
+    def read_stock_list(self):
+
+        stocks = pd.read_csv('./data/market/stocks/stock_list.csv')
+
+        
+        data = stocks['代號'].to_list()
+
+        return data

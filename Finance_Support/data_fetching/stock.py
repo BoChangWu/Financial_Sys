@@ -25,6 +25,16 @@ class Stock():
         self.price  = self.stock.info['currentPrice']
         self.day_price_trend = {'date': date.strftime(date.today(),'%Y-%m-%d'),'trend':pd.DataFrame()}
         
+    def save_history(self,from_date,to_date):
+        '''
+        from_date: 'yyyy-mm-dd'
+        to_date: 'yyyy-mm-dd' 需要多加一天 
+        '''
+        res = self.stock.history(start=from_date,end=to_date)
+
+        save_csv(res,f"market/stocks/history/{self.stock_id}.csv")
+        
+        return res 
     def supervise_price(self,end_time:datetime,interval=2) -> None:
         
         update_times = []

@@ -15,7 +15,7 @@ class TestStrategy(bt.Strategy):
 
     params = (
         ('maperiod',15),
-    )
+        )
 
     def log(self,txt,dt=None):
         '''Logging function for this strategy'''
@@ -32,6 +32,8 @@ class TestStrategy(bt.Strategy):
         # 官方範例, 新增一個 15ma 的資料序列備用
         self.sma = bt.indicators.SmoothedMovingAverage(
             self.datas[0], period=self.params.maperiod)
+        
+        
 
     def notify_order(self,order):
         '''追蹤訂單狀態, 只在訂單完成買入時執行'''
@@ -106,7 +108,8 @@ if __name__ == '__main__':
 # Create Data Feed with YahooFinanceData Function
     data = bt.feeds.PandasData(
         dataname = yf.download('2379.TW',start='2014-01-01',end='2022-12-31'))
-        
+    
+    # print(yf.download('2379.TW',start='2014-01-01',end='2022-12-31'))
     
 # Add the Data Feed to Cerebro | 
     #傳入 data feed
@@ -123,9 +126,11 @@ if __name__ == '__main__':
     print('Starting Portfolio Value: %.2f' % cerebro.broker.getvalue())
     # Run over everthing
     results = cerebro.run()
+
+    
     # Print out the final result
     print('Final Portfolio Value: %.2f' % cerebro.broker.getvalue())
-    
+
     strat= results[0]
     pyfoliozer = strat.analyzers.getbyname('pyfolio')
     returns, positions, transactions,gross_lev = pyfoliozer.get_pf_items()
